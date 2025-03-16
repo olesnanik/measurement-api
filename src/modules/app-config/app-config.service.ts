@@ -35,6 +35,8 @@ export function getValidationSchema() {
     DB_USERNAME: z.string(),
     DB_PASSWORD: z.string(),
     DB_DATABASE: z.string(),
+    API_JWT_SECRET: z.string(),
+    API_JWT_REFRESH_SECRET: z.string(),
   });
 }
 

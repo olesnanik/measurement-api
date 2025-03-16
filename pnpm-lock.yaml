@@ -32,6 +32,9 @@ dependencies:
   bcryptjs:
     specifier: ^3.0.2
     version: 3.0.2
+  nanoid:
+    specifier: ^5.1.4
+    version: 5.1.4
   nestjs-zod:
     specifier: ^4.3.1
     version: 4.3.1(@nestjs/common@11.0.1)(@nestjs/core@11.0.1)(@nestjs/swagger@11.0.6)(zod@3.24.2)
@@ -41,9 +44,6 @@ dependencies:
   passport-http:
     specifier: ^0.3.0
     version: 0.3.0
-  passport-jwt:
-    specifier: ^4.0.1
-    version: 4.0.1
   pg:
     specifier: ^8.14.0
     version: 8.14.0
@@ -5042,6 +5042,12 @@ packages:
     engines: {node: ^18.17.0 || >=20.5.0}
     dev: true
 
+  /nanoid@5.1.4:
+    resolution: {integrity: sha512-GTFcMIDgR7tqji/LpSY8rtg464VnJl/j6ypoehYnuGb+Y8qZUdtKB8WVCXon0UEZgFDbuUxpIl//6FHLHgXSNA==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
+    dev: false
+
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
@@ -5236,13 +5242,6 @@ packages:
     resolution: {integrity: sha512-OwK9DkqGVlJfO8oD0Bz1VDIo+ijD3c1ZbGGozIZw+joIP0U60pXY7goB+8wiDWtNqHpkTaQiJ9Ux1jE3Ykmpuw==}
     engines: {node: '>= 0.4.0'}
     dependencies:
-      passport-strategy: 1.0.0
-    dev: false
-
-  /passport-jwt@4.0.1:
-    resolution: {integrity: sha512-UCKMDYhNuGOBE9/9Ycuoyh7vP6jpeTp/+sfMJl7nLff/t6dps+iaeE0hhNkKN8/HZHcJ7lCdOyDxHdDoxoSvdQ==}
-    dependencies:
-      jsonwebtoken: 9.0.2
       passport-strategy: 1.0.0
     dev: false
 

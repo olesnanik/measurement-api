@@ -1,13 +1,15 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AdminAuthGuard } from '../guards/admin-auth-guard';
 import {
   ApiBasicAuth,
+  ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiResponse,
 } from '@nestjs/swagger';
 import { CreateUserDto } from '../dto/create-user-dto';
 import { UserService } from '../services/user.service';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('user')
 export class UserController {
@@ -21,7 +23,14 @@ export class UserController {
   })
   @ApiCreatedResponse({ description: 'User successfully created' })
   @ApiResponse({ status: 400, description: 'Validation failed' })
-  async getHello(@Body() createUserDto: CreateUserDto): Promise<void> {
+  async create(@Body() createUserDto: CreateUserDto): Promise<void> {
     await this.userService.create(createUserDto);
+  }
+
+  @Get('protected')
+  @ApiBearerAuth('user-bearer-auth')
+  @UseGuards(AuthGuard)
+  hello() {
+    return 'hellooooo!!!!';
   }
 }

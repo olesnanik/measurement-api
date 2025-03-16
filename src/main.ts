@@ -14,7 +14,7 @@ async function bootstrap() {
     .setTitle('Measurement API')
     .setDescription('Measurement API documentation')
     .setVersion('1.0')
-    .addBearerAuth()
+    .addBearerAuth(undefined, 'user-bearer-auth')
     .addBasicAuth(
       { type: 'http', scheme: 'basic' },
       'basic-auth', // Security name (must match @ApiBasicAuth decorator)
