@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ZodValidationPipe } from 'nestjs-zod';
+import { ZodValidationPipe, patchNestJsSwagger } from 'nestjs-zod';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ZodValidationPipe());
 
   // Swagger Configuration
+  patchNestJsSwagger();
   const config = new DocumentBuilder()
     .setTitle('Measurement API')
     .setDescription('Measurement API documentation')
