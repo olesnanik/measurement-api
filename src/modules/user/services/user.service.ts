@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../shared/entities/user.entity';
-import { CreateUserDto } from '../dto/create-user-dto';
+import { UserCreateDto } from '../dto/user-create-dto';
 import { AuthService } from './auth.service';
 import { QueryFailedError } from 'typeorm';
 
@@ -13,7 +13,7 @@ export class UserService {
     private readonly authService: AuthService,
   ) {}
 
-  async create({ name, login, password }: CreateUserDto): Promise<User> {
+  async create({ name, login, password }: UserCreateDto): Promise<User> {
     try {
       const newUser = this.userRepository.create({
         name,

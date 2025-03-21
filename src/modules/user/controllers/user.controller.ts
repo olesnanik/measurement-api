@@ -7,7 +7,7 @@ import {
   ApiCreatedResponse,
   ApiResponse,
 } from '@nestjs/swagger';
-import { CreateUserDto } from '../dto/create-user-dto';
+import { UserCreateDto } from '../dto/user-create-dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../guards/auth.guard';
 
@@ -23,7 +23,7 @@ export class UserController {
   })
   @ApiCreatedResponse({ description: 'User successfully created' })
   @ApiResponse({ status: 400, description: 'Validation failed' })
-  async create(@Body() createUserDto: CreateUserDto): Promise<void> {
+  async create(@Body() createUserDto: UserCreateDto): Promise<void> {
     await this.userService.create(createUserDto);
   }
 

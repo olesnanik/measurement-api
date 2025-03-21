@@ -24,6 +24,17 @@ export class TokenService {
     return await this.userTokenRepository.save(newToken);
   }
 
+  async updateToken(
+    userToken: UserToken,
+    accessToken: string,
+    refreshToken: string,
+  ): Promise<UserToken> {
+    userToken.accessToken = accessToken;
+    userToken.refreshToken = refreshToken;
+    await this.userTokenRepository.update({ id: userToken.id }, userToken);
+    return userToken;
+  }
+
   async removeByAccessToken(accessToken: string): Promise<void> {
     await this.userTokenRepository.delete({ accessToken });
   }
@@ -42,7 +53,7 @@ export class TokenService {
   async findByRefreshToken(refreshToken: string): Promise<UserToken | null> {
     return await this.userTokenRepository.findOne({
       where: { refreshToken },
-      relations: ['user', 'device'],
+      relations: ['user'],
     });
   }
 }
