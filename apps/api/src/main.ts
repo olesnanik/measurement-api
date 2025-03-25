@@ -5,10 +5,8 @@ import { ZodValidationPipe, patchNestJsSwagger } from 'nestjs-zod';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   // Enable validation globally
   app.useGlobalPipes(new ZodValidationPipe());
-
   // Swagger Configuration
   patchNestJsSwagger();
   const config = new DocumentBuilder()

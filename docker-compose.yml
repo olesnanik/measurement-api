@@ -1,11 +1,28 @@
-version: '3.8'
 services:
+  api:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "3000:3000"
+    command: pnpm start:dev
+    volumes:
+      - .:/measurement
+
+#       empty volume to avoid conflicts with host files
+      - /measurement/node_modules
+      - /measurement/dist
+    depends_on:
+      - db
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
   db:
     image: postgres:17.4
     environment:
-      POSTGRES_DB: my_database
-      POSTGRES_USER: my_user
-      POSTGRES_PASSWORD: my_password
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - 5432:5432
     volumes:
