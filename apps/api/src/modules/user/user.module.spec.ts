@@ -179,8 +179,7 @@ describe('User module', () => {
         .auth(accessToken, { type: 'bearer' })
         .send();
 
-      console.log(response);
-      expect(response.status).toBe(200);
+      expect(response.status).toBe(204);
     });
   });
 });

@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcryptjs from 'bcryptjs';
 import { AppConfigService } from '../../app-config/app-config.service';
 import { UserLoginDto } from '../dto/user-login-dto';
@@ -10,7 +14,7 @@ import { UserTokenResponseDto } from '../dto/user-token-response-dto';
 import { TokenService } from './token.service';
 import { nanoid } from 'nanoid';
 import { UserRefreshDto } from '../dto/user-refresh.dto';
-import { UserLogoutDto } from '../dto/user-logout.dto';
+import { Request } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -75,8 +79,16 @@ export class AuthService {
     return { accessToken, refreshToken: newRefreshToken };
   }
 
-  async logout({ accessToken }: UserLogoutDto): Promise<void> {
+  async logout(request: Request): Promise<void> {
+    const accessToken = this.extractTokenFromHeader(request);
+    if (!accessToken) throw new BadRequestException();
+
     await this.tokenService.removeByAccessToken(accessToken);
+  }
+
+  extractTokenFromHeader(request: Request): string | undefined {
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
+    return type === 'Bearer' ? token : undefined;
   }
 
   private async generateAndSaveNewTokens(
