@@ -1,10 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { UserLoginDto } from '../dto/user-login-dto';
 import { UserTokenResponseDto } from '../dto/user-token-response-dto';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
 import { UserRefreshDto } from '../dto/user-refresh.dto';
 import { UserLogoutDto } from '../dto/user-logout.dto';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('user/auth')
 export class AuthController {
@@ -25,6 +26,8 @@ export class AuthController {
   }
 
   @Post('logout')
+  @ApiBearerAuth('user-bearer-auth')
+  @UseGuards(AuthGuard)
   @ApiOkResponse()
   async logout(@Body() userLogoutDto: UserLogoutDto) {
     return await this.authService.logout(userLogoutDto);
