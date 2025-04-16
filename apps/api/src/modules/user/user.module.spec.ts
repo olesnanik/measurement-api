@@ -128,6 +128,45 @@ describe('User module', () => {
       expect(response.body).toHaveProperty('refreshToken');
     });
 
+    it('should return 400 for invalid credentials', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/user/auth/login')
+        .send({
+          login: user.login,
+          password: 'wrong-password',
+        });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for missing credentials', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/user/auth/login')
+        .send({});
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for missing password', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/user/auth/login')
+        .send({
+          login: user.login,
+        });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for missing login', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/user/auth/login')
+        .send({
+          password: user.password,
+        });
+
+      expect(response.status).toBe(400);
+    });
+
     it('should refresh token', async () => {
       const loginResponse = await request(app.getHttpServer())
         .post('/user/auth/login')
@@ -150,6 +189,22 @@ describe('User module', () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
+    });
+
+    it('should return 400 for missing refresh token', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/user/auth/refresh')
+        .send({});
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 401 for invalid refresh token', async () => {
+      const response = await request(app.getHttpServer())
+        .post('/user/auth/refresh')
+        .send({ refreshToken: 'invalid-token' });
+
+      expect(response.status).toBe(401);
     });
 
     it('should return 401 for logout route without a Bearer token', async () => {
@@ -180,6 +235,33 @@ describe('User module', () => {
         .send();
 
       expect(response.status).toBe(204);
+    });
+
+    it('should return 401 for the second logout attempt with tha same accessToken', async () => {
+      await postUser(user);
+      const loginResponse = await request(app.getHttpServer())
+        .post('/user/auth/login')
+        .send({
+          login: user.login,
+          password: user.password,
+        });
+
+      const { accessToken } = loginResponse.body as {
+        accessToken: string;
+        refreshToken: string;
+      };
+
+      await request(app.getHttpServer())
+        .post('/user/auth/logout')
+        .auth(accessToken, { type: 'bearer' })
+        .send();
+
+      const response = await request(app.getHttpServer())
+        .post('/user/auth/logout')
+        .auth(accessToken, { type: 'bearer' })
+        .send();
+
+      expect(response.status).toEqual(401);
     });
   });
 });
