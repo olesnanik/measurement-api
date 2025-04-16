@@ -1,10 +1,16 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../shared/entities/user.entity';
 import { UserCreateDto } from '../dto/user-create-dto';
 import { AuthService } from './auth.service';
 import { QueryFailedError } from 'typeorm';
+import { Request } from 'express';
+import { UserBaseInfoResponseDto } from '../dto/user-base-info-response-dto';
 
 @Injectable()
 export class UserService {
@@ -33,5 +39,15 @@ export class UserService {
 
       throw e;
     }
+  }
+
+  getBaseInfo(request: Request): UserBaseInfoResponseDto {
+    const user = request.user;
+    if (!user) throw new BadRequestException();
+
+    return {
+      name: user.name,
+      login: user.login,
+    };
   }
 }

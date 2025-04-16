@@ -1,15 +1,19 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
-import { AdminAuthGuard } from '../guards/admin-auth-guard';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { AdminAuthGuard } from '../guards/admin-auth.guard';
 import {
+  ApiBadRequestResponse,
   ApiBasicAuth,
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiOkResponse,
   ApiResponse,
 } from '@nestjs/swagger';
 import { UserCreateDto } from '../dto/user-create-dto';
 import { UserService } from '../services/user.service';
 import { AuthGuard } from '../guards/auth.guard';
+import { UserBaseInfoResponseDto } from '../dto/user-base-info-response-dto';
+import { Request } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -27,10 +31,12 @@ export class UserController {
     await this.userService.create(createUserDto);
   }
 
-  @Get('protected')
+  @Get('base-info')
   @ApiBearerAuth('user-bearer-auth')
   @UseGuards(AuthGuard)
-  hello() {
-    return 'hellooooo!!!!';
+  @ApiOkResponse({ type: UserBaseInfoResponseDto })
+  @ApiBadRequestResponse()
+  baseInfo(@Req() request: Request) {
+    return this.userService.getBaseInfo(request);
   }
 }

@@ -101,6 +101,45 @@ describe('User module', () => {
         }),
       ).toEqual(true);
     });
+
+    it('should return 401 for unauthorized access to base-info', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/user/base-info')
+        .send();
+
+      expect(response.status).toEqual(401);
+    });
+
+    it('should return base-info for authorized user', async () => {
+      const user: UserCreateDto = {
+        name: 'John Doe',
+        login: 'john-doe',
+        password: 'John-Doe-123',
+      };
+      await postUser(user);
+
+      const loginResponse = await request(app.getHttpServer())
+        .post('/user/auth/login')
+        .send({
+          login: user.login,
+          password: user.password,
+        });
+
+      const { accessToken } = loginResponse.body as {
+        accessToken: string;
+        refreshToken: string;
+      };
+
+      const response = await request(app.getHttpServer())
+        .get('/user/base-info')
+        .auth(accessToken, { type: 'bearer' });
+
+      expect(response.status).toEqual(200);
+      expect(response.body).toStrictEqual({
+        login: user.login,
+        name: user.name,
+      });
+    });
   });
 
   describe('Auth', () => {
