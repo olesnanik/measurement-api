@@ -30,6 +30,7 @@ export class AuthController {
 
   @Post('refresh')
   @ApiOkResponse({ type: UserTokenResponseDto })
+  @HttpCode(200)
   refresh(@Body() authRefreshDto: UserRefreshDto) {
     return this.authService.refresh(authRefreshDto);
   }

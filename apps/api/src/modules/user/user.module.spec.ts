@@ -147,7 +147,7 @@ describe('User module', () => {
           refreshToken,
         });
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('accessToken');
       expect(response.body).toHaveProperty('refreshToken');
     });
